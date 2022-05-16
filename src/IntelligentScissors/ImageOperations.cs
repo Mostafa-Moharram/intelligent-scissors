@@ -38,6 +38,8 @@ namespace IntelligentScissors
     /// </summary>
     public class ImageOperations
     {
+        public static readonly RGBPixel BLACK_COLOR = new RGBPixel { blue = 0, green = 0, red = 0 };
+
         /// <summary>
         /// Open an image and load it into 2D array of colors (size: Height x Width)
         /// </summary>
@@ -138,13 +140,9 @@ namespace IntelligentScissors
 
             Vector2D gradient = CalculateGradientAtPixel(x, y, ImageMatrix);
 
-            double gradientMagnitude = Math.Sqrt(gradient.X * gradient.X + gradient.Y * gradient.Y);
-            double edgeAngle = Math.Atan2(gradient.Y, gradient.X);
-            double rotatedEdgeAngle = edgeAngle + Math.PI / 2.0;
-
             Vector2D energy = new Vector2D();
-            energy.X = Math.Abs(gradientMagnitude * Math.Cos(rotatedEdgeAngle));
-            energy.Y = Math.Abs(gradientMagnitude * Math.Sin(rotatedEdgeAngle));
+            energy.X = Math.Abs(gradient.Y) + 1;
+            energy.Y = Math.Abs(gradient.X) + 1;
 
             return energy;
         }
@@ -293,34 +291,30 @@ namespace IntelligentScissors
         {
             Vector2D gradient = new Vector2D();
 
-            RGBPixel mainPixel = ImageMatrix[y, x];
+            RGBPixel mainPixel = ImageMatrix[x, y];
             double pixelGrayVal = 0.21 * mainPixel.red + 0.72 * mainPixel.green + 0.07 * mainPixel.blue;
             
-            if (y == GetHeight(ImageMatrix) - 1)
+            if (y == GetWidth(ImageMatrix) - 1)
             {
                 //boundary pixel.
-                for (int i = 0; i < 3; i++)
-                {
-                    gradient.Y = 0;
-                }
+                gradient.Y = 0;
             }
             else
             {
-                RGBPixel downPixel = ImageMatrix[y + 1, x];
+                RGBPixel downPixel = ImageMatrix[x, y + 1];
                 double downPixelGrayVal = 0.21 * downPixel.red + 0.72 * downPixel.green + 0.07 * downPixel.blue;
                 
                 gradient.Y = pixelGrayVal - downPixelGrayVal;
             }
 
-            if (x == GetWidth(ImageMatrix) - 1)
+            if (x == GetHeight(ImageMatrix) - 1)
             {
                 //boundary pixel.
                 gradient.X = 0;
-                
             }
             else
             {
-                RGBPixel rightPixel = ImageMatrix[y, x + 1];
+                RGBPixel rightPixel = ImageMatrix[x + 1, y];
                 double rightPixelGrayVal = 0.21 * rightPixel.red + 0.72 * rightPixel.green + 0.07 * rightPixel.blue;
                 
                 gradient.X = pixelGrayVal - rightPixelGrayVal;

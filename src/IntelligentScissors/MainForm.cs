@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace IntelligentScissors
 {
@@ -16,6 +17,7 @@ namespace IntelligentScissors
         }
 
         RGBPixel[,] ImageMatrix;
+        ArrayList Anchors = new ArrayList();
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
@@ -26,20 +28,34 @@ namespace IntelligentScissors
                 string OpenedFilePath = openFileDialog1.FileName;
                 ImageMatrix = ImageOperations.OpenImage(OpenedFilePath);
                 ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
+                Graph.Construct(ImageMatrix);
+                Anchors.Clear();
             }
-            txtWidth.Text = ImageOperations.GetWidth(ImageMatrix).ToString();
-            txtHeight.Text = ImageOperations.GetHeight(ImageMatrix).ToString();
         }
 
-        private void btnGaussSmooth_Click(object sender, EventArgs e)
+        private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            double sigma = double.Parse(txtGaussSigma.Text);
-            int maskSize = (int)nudMaskSize.Value ;
-            ImageMatrix = ImageOperations.GaussianFilter1D(ImageMatrix, maskSize, sigma);
-            ImageOperations.DisplayImage(ImageMatrix, pictureBox2);
+
         }
 
-       
-       
+        private void btnFinishSelection_Click(object sender, EventArgs e)
+        {
+            Anchors.Add(Anchors[0]);
+            Graph.CalculateShortestPath(ImageMatrix, Anchors);
+            Graph.DrawShortestPath(ImageMatrix, Anchors, ImageOperations.BLACK_COLOR);
+            ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
+        }
+
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e) {
+            int anchorRow = e.Y;
+            int anchorColumn = e.X;
+            Anchors.Add(new KeyValuePair<int, int>(anchorRow, anchorColumn));
+            if (Anchors.Count > 1)
+            {
+                Graph.CalculateShortestPath(ImageMatrix, Anchors);
+                Graph.DrawShortestPath(ImageMatrix, Anchors, ImageOperations.BLACK_COLOR);
+                ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
+            }
+        }
     }
 }
