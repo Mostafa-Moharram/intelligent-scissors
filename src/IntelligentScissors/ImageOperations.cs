@@ -39,6 +39,7 @@ namespace IntelligentScissors
     public class ImageOperations
     {
         public static readonly RGBPixel BLACK_COLOR = new RGBPixel { blue = 0, green = 0, red = 0 };
+        public static readonly double OFFSET = 1e-16;  
 
         /// <summary>
         /// Open an image and load it into 2D array of colors (size: Height x Width)
@@ -141,8 +142,8 @@ namespace IntelligentScissors
             Vector2D gradient = CalculateGradientAtPixel(x, y, ImageMatrix);
 
             Vector2D energy = new Vector2D();
-            energy.X = Math.Abs(gradient.Y) + 1;
-            energy.Y = Math.Abs(gradient.X) + 1;
+            energy.X = Math.Abs(gradient.Y) + OFFSET;
+            energy.Y = Math.Abs(gradient.X) + OFFSET;
 
             return energy;
         }
