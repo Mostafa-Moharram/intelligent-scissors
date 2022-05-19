@@ -8,11 +8,18 @@ using System.Drawing.Imaging;
 ///Intelligent Scissors
 ///
 
-namespace IntelligentScissors
-{
+namespace IntelligentScissors {
+    public class PixelColorAndPosition {
+        public readonly int X, Y;
+        public readonly Color Color;
+        public PixelColorAndPosition(int X, int Y, Color Color) {
+            this.X = X; this.Y = Y; this.Color = Color;
+        }
+    }
     /// <summary>
     /// Holds the pixel color in 3 byte values: red, green and blue
     /// </summary>
+    ///
     public struct RGBPixel
     {
         public byte red, green, blue;

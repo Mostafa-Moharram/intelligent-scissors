@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
 namespace IntelligentScissors
 {
@@ -12,6 +13,11 @@ namespace IntelligentScissors
         public static double[,] ShortestPath;
         public static KeyValuePair<int, int>[,] Parent;
         public static ArrayList[,] AdjLists;
+        public static readonly int RADIUS = 75;
+
+        public static bool Contains(int source_x, int source_y, int x, int y) {
+            return Math.Abs(x - source_x) < RADIUS && Math.Abs(y - source_y) < RADIUS;
+        }
 
         public static void Construct(RGBPixel[,] ImageMatrix)
         {
@@ -45,35 +51,29 @@ namespace IntelligentScissors
             }
         }
         
-        public static void CalculateShortestPath(RGBPixel[,] ImageMatrix, ArrayList Anchors)
+        public static void CalculateShortestPath(RGBPixel[,] ImageMatrix,
+            KeyValuePair<int, int> source)
         {
             int height = ImageOperations.GetHeight(ImageMatrix);
             int width = ImageOperations.GetWidth(ImageMatrix);
             ShortestPath = new double [height, width];
             Parent = new KeyValuePair<int, int>[height, width];
-            for (int i = 0; i < height; ++i)
+            for (int i = Math.Max(0, source.Key - RADIUS); i < Math.Min(height, source.Key + RADIUS); ++i)
             {
-                for (int j = 0; j < width; ++j)
+                for (int j = Math.Max(0, source.Value - RADIUS); j < Math.Min(width, source.Value + RADIUS); ++j)
                 {
                     ShortestPath[i, j] = double.PositiveInfinity;
                 }
             }
             var Nodes = new SortedSet<Node>();
-            var sourcePosition = (KeyValuePair<int, int>)Anchors[Anchors.Count - 1];
-            var destinationPosition = (KeyValuePair<int, int>)Anchors[Anchors.Count - 2];
-            int destinationRow = destinationPosition.Key, destinationColumn = destinationPosition.Value;
-            Node source = new Node(sourcePosition.Key, sourcePosition.Value, 0.0);
-            Parent[source.X, source.Y] = new KeyValuePair<int, int>(source.X, source.Y);
-            ShortestPath[source.X, source.Y] = source.Cost;
-            Nodes.Add(source);
+            Node sourceNode = new Node(source.Key, source.Value, 0.0);
+            Parent[sourceNode.X, sourceNode.Y] = new KeyValuePair<int, int>(source.Key, source.Value);
+            ShortestPath[sourceNode.X, sourceNode.Y] = sourceNode.Cost;
+            Nodes.Add(sourceNode);
             while (Nodes.Count != 0) {
             
                 Node node = Nodes.Min();
                 Nodes.Remove(node);
-                if (node.X == destinationRow && node.Y == destinationColumn)
-                {
-                    break;
-                }
                 if (ShortestPath[node.X, node.Y] < node.Cost)
                 {
                     continue;
@@ -82,6 +82,8 @@ namespace IntelligentScissors
                 {
                     var newCost = node.Cost + edge.Weight;
                     System.Diagnostics.Debug.Assert(edge.Weight != double.PositiveInfinity);
+                    if (!Contains(source.Key, source.Value, edge.X, edge.Y))
+                        continue;
                     if (newCost < ShortestPath[edge.X, edge.Y])
                     {
                         ShortestPath[edge.X, edge.Y] = newCost;
@@ -92,23 +94,53 @@ namespace IntelligentScissors
             }
         }
 
-        public static void DrawShortestPath(RGBPixel[,] ImageMatrix, ArrayList Anchors, RGBPixel PixelColor)
+        public static void DrawShortestPath(Bitmap ImageMatrix, RGBPixel PixelColor, KeyValuePair<int, int> Source, KeyValuePair<int, int> Destination)
         {
-            KeyValuePair<int, int> Source = (KeyValuePair<int, int>)Anchors[Anchors.Count - 1];
-            KeyValuePair<int, int> Destination = (KeyValuePair<int, int>)Anchors[Anchors.Count - 2];
             int SourceRow = Source.Key;
             int SourceColumn = Source.Value;
             int CurrentRow = Destination.Key, CurrentColumn = Destination.Value;
             while (CurrentRow != SourceRow || CurrentColumn != SourceColumn)
             {
-                ImageMatrix[CurrentRow, CurrentColumn] = PixelColor;
-                TestOutput.Path.Push(new KeyValuePair<int, int>(CurrentRow, CurrentColumn));
+                //ImageMatrix[CurrentRow, CurrentColumn] = PixelColor;
+                ImageMatrix.SetPixel(CurrentColumn, CurrentRow,
+                    Color.FromArgb(PixelColor.red, PixelColor.green, PixelColor.blue));
+                TestOutput.Path.Enqueue(new KeyValuePair<int, int>(CurrentRow, CurrentColumn));
                 KeyValuePair<int, int> ParentPosition = Graph.Parent[CurrentRow, CurrentColumn];
                 CurrentRow = ParentPosition.Key;
                 CurrentColumn = ParentPosition.Value;
             }
-            ImageMatrix[CurrentRow, CurrentColumn] = PixelColor;
-            TestOutput.Path.Push(new KeyValuePair<int, int>(CurrentRow, CurrentColumn));
+            //ImageMatrix[CurrentRow, CurrentColumn] = PixelColor;
+            ImageMatrix.SetPixel(CurrentColumn, CurrentRow,
+                Color.FromArgb(PixelColor.red, PixelColor.green, PixelColor.blue));
+            TestOutput.Path.Enqueue(new KeyValuePair<int, int>(CurrentRow, CurrentColumn));
+        }
+        public static void MouseDrawShortestPath(Bitmap ImageMatrix, RGBPixel color, KeyValuePair<int, int> Source, KeyValuePair<int, int> Destination, Queue<PixelColorAndPosition> queue) {
+            int SourceRow = Source.Key;
+            int SourceColumn = Source.Value;
+            int CurrentRow = Destination.Key, CurrentColumn = Destination.Value;
+            while (CurrentRow != SourceRow || CurrentColumn != SourceColumn) {
+                //ImageMatrix[CurrentRow, CurrentColumn] = PixelColor
+                queue.Enqueue(new PixelColorAndPosition(
+                    CurrentColumn, CurrentRow,
+                    ImageMatrix.GetPixel(CurrentColumn, CurrentRow)));
+                ImageMatrix.SetPixel(CurrentColumn, CurrentRow,
+                    Color.FromArgb(color.red, color.green, color.blue));
+                KeyValuePair<int, int> ParentPosition = Graph.Parent[CurrentRow, CurrentColumn];
+                CurrentRow = ParentPosition.Key;
+                CurrentColumn = ParentPosition.Value;
+            }
+            //ImageMatrix[CurrentRow, CurrentColumn] = PixelColor;
+            queue.Enqueue(new PixelColorAndPosition(
+                    CurrentColumn, CurrentRow,
+                    ImageMatrix.GetPixel(CurrentColumn, CurrentRow)));
+            ImageMatrix.SetPixel(CurrentColumn, CurrentRow,
+                Color.FromArgb(color.red, color.green, color.blue));
+        }
+        public static void MouseUndrawShortestPath(Bitmap ImageMatrix, Queue<PixelColorAndPosition> queue) {
+            while (queue.Count > 0) {
+                var pixel = queue.Dequeue();
+                ImageMatrix.SetPixel(pixel.X, pixel.Y, pixel.Color);
+            }
         }
     }
 

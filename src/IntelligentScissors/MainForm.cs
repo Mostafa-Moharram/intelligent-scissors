@@ -15,9 +15,11 @@ namespace IntelligentScissors
         {
             InitializeComponent();
         }
-
-        RGBPixel[,] ImageMatrix;
+        
+        public static RGBPixel[,] ImageMatrix;
         public static ArrayList Anchors = new ArrayList();
+        Queue<PixelColorAndPosition> values = new Queue<PixelColorAndPosition>();
+        bool allowLiveWire = true;
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
@@ -40,14 +42,18 @@ namespace IntelligentScissors
             }
         }
 
-        private void pirctureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
+        private void pirctureBox1_MouseDoubleClick(object sender, MouseEventArgs e) {
+            if (Anchors.Count < 2) return;
             DateTime startTime = DateTime.Now;
-            Anchors.Add(Anchors[0]);
-            Graph.CalculateShortestPath(ImageMatrix, Anchors);
-            Graph.DrawShortestPath(ImageMatrix, Anchors, ImageOperations.BLACK_COLOR);
-            ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
+            KeyValuePair<int, int> destination = (KeyValuePair<int, int>)Anchors[0];
+            KeyValuePair<int, int> source = (KeyValuePair<int, int>)Anchors[Anchors.Count - 1];
+            if (!Graph.Contains(e.Y, e.X, destination.Key, destination.Value) ||
+                !Graph.Contains(e.Y, e.X, source.Key, source.Value)) return;
+            Graph.DrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR,
+                source, destination);
+            pictureBox1.Refresh();
             TestOutput.ShortestPathTime += (DateTime.Now - startTime).TotalSeconds;
+            allowLiveWire = false;
             TestOutput.PrintPathInCompleteTestsFormat(ImageMatrix);
             //System.Diagnostics.Debug.WriteLine("Double Click");
         }
@@ -56,20 +62,35 @@ namespace IntelligentScissors
             DateTime startTime = DateTime.Now;
             int anchorRow = e.Y;
             int anchorColumn = e.X;
-            Anchors.Add(new KeyValuePair<int, int>(anchorRow, anchorColumn));
-            if (Anchors.Count > 1)
-            {
-                Graph.CalculateShortestPath(ImageMatrix, Anchors);
-                Graph.DrawShortestPath(ImageMatrix, Anchors, ImageOperations.BLACK_COLOR);
-                ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
+            var source = new KeyValuePair<int, int>(anchorRow, anchorColumn);
+            var destination = new KeyValuePair<int, int>();
+            if (Anchors.Count > 0) {
+                destination = (KeyValuePair<int, int>)Anchors[Anchors.Count - 1];
+                if (!Graph.Contains(destination.Key, destination.Value, source.Key, source.Value)) {
+                    TestOutput.ShortestPathTime += (DateTime.Now - startTime).TotalSeconds;
+                    return;
+                }
             }
+            Anchors.Add(source);
+            Graph.CalculateShortestPath(ImageMatrix, source);
+            if (Anchors.Count > 1) {
+                Graph.DrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR, source, destination);
+                pictureBox1.Refresh();
+            }
+            values.Clear();
             TestOutput.ShortestPathTime += (DateTime.Now - startTime).TotalSeconds;
             //System.Diagnostics.Debug.WriteLine("Single Click");
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e) {
-            if (Anchors.Count == 0) return;
-
+            if (!allowLiveWire || Anchors.Count == 0) return;
+            KeyValuePair<int, int> source = (KeyValuePair<int, int>)Anchors[Anchors.Count - 1];
+            if (!Graph.Contains(source.Key, source.Value, e.Y, e.X))
+                return;
+            KeyValuePair<int, int> destination = new KeyValuePair<int, int>(e.Y, e.X);
+            Graph.MouseUndrawShortestPath((Bitmap)pictureBox1.Image, values);
+            Graph.MouseDrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR, source, destination, values);
+            pictureBox1.Refresh();
         }
     }
 }

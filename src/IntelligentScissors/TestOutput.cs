@@ -9,9 +9,32 @@ namespace IntelligentScissors
 {
     class TestOutput
     {
-
-        public static Stack<KeyValuePair<int, int>> Path = new Stack<KeyValuePair<int, int>>();
+        public enum TestType {
+            NoTest, SampleTest, CompleteTest
+        };
+        public static TestType PrintTestType = TestType.NoTest;
+        public static Queue<KeyValuePair<int, int>> Path = new Queue<KeyValuePair<int, int>>();
         public static double ShortestPathTime; // time in seconds
+        public static void OutputGraph(ArrayList[,] AdjLists, int Height, int Width, int Time) {
+            switch (PrintTestType) {
+                case TestType.SampleTest:
+                    OutputGraphInSampleTestsFormat(AdjLists, Height, Width);
+                    break;
+                case TestType.CompleteTest:
+                    OutputGraphInCompleteTestsFormat(AdjLists, Height, Width, Time);
+                    break;
+            }
+        }
+        public static void OutputPath(RGBPixel[,] ImageMatrix) {
+            switch (PrintTestType) {
+                case TestType.SampleTest:
+                    PrintPathInSampleTestsFormat(ImageMatrix);
+                    break;
+                case TestType.CompleteTest:
+                    PrintPathInCompleteTestsFormat(ImageMatrix);
+                    break;
+            }
+        }
         public static void OutputGraphInSampleTestsFormat(ArrayList[,] AdjLists, int Height, int Width)
         {
             string file_name = "sample-output.txt";
@@ -42,7 +65,7 @@ namespace IntelligentScissors
             StreamWriter streamWriter = new StreamWriter(file_name);
             while (Path.Count > 0)
             {
-                KeyValuePair<int, int> node = Path.Pop();
+                KeyValuePair<int, int> node = Path.Dequeue();
                 int row = node.Key;
                 int column = node.Value;
                 int node_index = row * width + column;
@@ -91,7 +114,7 @@ namespace IntelligentScissors
             streamWriter.WriteLine("Format: (node_index, x, y)");
             while (Path.Count > 0)
             {
-                KeyValuePair<int, int> node = Path.Pop();
+                KeyValuePair<int, int> node = Path.Dequeue();
                 int row = node.Key;
                 int column = node.Value;
                 streamWriter.WriteLine($"{{X = {row},Y = {column}}},{row},{column})");
