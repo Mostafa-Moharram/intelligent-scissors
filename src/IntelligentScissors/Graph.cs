@@ -18,24 +18,23 @@ namespace IntelligentScissors
         public static bool Contains(int source_x, int source_y, int x, int y) {
             return Math.Abs(x - source_x) < RADIUS && Math.Abs(y - source_y) < RADIUS;
         }
-
-        public static void Construct(RGBPixel[,] ImageMatrix)
-        {
+        // Complexity Analysis: O(V), where V = width * height
+        public static void Construct(RGBPixel[,] ImageMatrix) { 
             int width = ImageOperations.GetWidth(ImageMatrix);
             int height = ImageOperations.GetHeight(ImageMatrix);
             Graph.AdjLists = new ArrayList[height, width];
-            for (int i = 0; i < height; ++i)
-            {
-                for (int j = 0; j < width; ++j)
-                {
+
+            // O(width * height)
+            for (int i = 0; i < height; ++i) { // O(height)
+                for (int j = 0; j < width; ++j) { // O(width)
                     Graph.AdjLists[i, j] = new ArrayList();
                 }
             }
-            for (int i = 0; i < height; ++i)
-            {
-                for (int j = 0; j < width; ++j)
-                {
-                    Vector2D vector = ImageOperations.CalculatePixelEnergies(i, j, ImageMatrix);
+
+            // O(width * height)
+            for (int i = 0; i < height; ++i) { // O(height)
+                for (int j = 0; j < width; ++j) { // O(width)
+                    Vector2D vector = ImageOperations.CalculatePixelEnergies(i, j, ImageMatrix); // O(1)
 
                     if (i != height - 1)
                     {
@@ -50,7 +49,8 @@ namespace IntelligentScissors
                 }
             }
         }
-        
+
+        // Complexity Analysis: O(1)
         public static void CalculateShortestPath(RGBPixel[,] ImageMatrix,
             KeyValuePair<int, int> source)
         {
@@ -58,10 +58,10 @@ namespace IntelligentScissors
             int width = ImageOperations.GetWidth(ImageMatrix);
             ShortestPath = new double [height, width];
             Parent = new KeyValuePair<int, int>[height, width];
-            for (int i = Math.Max(0, source.Key - RADIUS); i < Math.Min(height, source.Key + RADIUS); ++i)
-            {
-                for (int j = Math.Max(0, source.Value - RADIUS); j < Math.Min(width, source.Value + RADIUS); ++j)
-                {
+            // When the width and height are larger than RADIUS the complexity is O(RADUIS^2)
+            // which is equailvant to O(1). Otherwise, the complexity is O(width * height)
+            for (int i = Math.Max(0, source.Key - RADIUS); i < Math.Min(height, source.Key + RADIUS); ++i) {
+                for (int j = Math.Max(0, source.Value - RADIUS); j < Math.Min(width, source.Value + RADIUS); ++j) {
                     ShortestPath[i, j] = double.PositiveInfinity;
                 }
             }
@@ -70,25 +70,27 @@ namespace IntelligentScissors
             Parent[sourceNode.X, sourceNode.Y] = new KeyValuePair<int, int>(source.Key, source.Value);
             ShortestPath[sourceNode.X, sourceNode.Y] = sourceNode.Cost;
             Nodes.Add(sourceNode);
+            // When V is larger than (RADIUS^2) the complexity is O(RADUIS^2)
+            // which is equailvant to O(1). Otherwise, the complexity is O(V + E log(V))
             while (Nodes.Count != 0) {
             
-                Node node = Nodes.Min();
-                Nodes.Remove(node);
+                Node node = Nodes.Min(); // O(log(Nodes.size())
+                Nodes.Remove(node); // O(log(Nodes.size())
                 if (ShortestPath[node.X, node.Y] < node.Cost)
                 {
                     continue;
                 }
-                foreach (Edge edge in AdjLists[node.X, node.Y])
+                foreach (Edge edge in AdjLists[node.X, node.Y]) // O(1) - Maximum 4 children
                 {
                     var newCost = node.Cost + edge.Weight;
                     System.Diagnostics.Debug.Assert(edge.Weight != double.PositiveInfinity);
-                    if (!Contains(source.Key, source.Value, edge.X, edge.Y))
+                    if (!Contains(source.Key, source.Value, edge.X, edge.Y)) // O(1)
                         continue;
                     if (newCost < ShortestPath[edge.X, edge.Y])
                     {
                         ShortestPath[edge.X, edge.Y] = newCost;
                         Parent[edge.X, edge.Y] = new KeyValuePair<int, int>(node.X, node.Y);
-                        Nodes.Add(new Node(edge.X, edge.Y, newCost));
+                        Nodes.Add(new Node(edge.X, edge.Y, newCost)); // O(log(Nodes.size())
                     }
                 }
             }
