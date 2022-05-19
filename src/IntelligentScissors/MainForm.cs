@@ -26,6 +26,14 @@ namespace IntelligentScissors
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                if (noTestRadioButton.Checked)
+                    TestOutput.PrintTestType = TestOutput.TestType.NoTest;
+                else if (sampleTestFormatRadioButton.Checked)
+                    TestOutput.PrintTestType = TestOutput.TestType.SampleTest;
+                else if (completeTestFormatRadioButton.Checked)
+                    TestOutput.PrintTestType = TestOutput.TestType.CompleteTest;
+                testTypeGroupBox.Enabled = false;
+                panel1.Enabled = true;
                 //Open the browsed image and display it
                 string OpenedFilePath = openFileDialog1.FileName;
                 ImageMatrix = ImageOperations.OpenImage(OpenedFilePath);
@@ -35,10 +43,12 @@ namespace IntelligentScissors
                 double ConstructionTime = (DateTime.Now - StartTime).TotalSeconds; 
                 int Width = ImageOperations.GetWidth(ImageMatrix);
                 int Height = ImageOperations.GetHeight(ImageMatrix);
-                TestOutput.OutputGraphInCompleteTestsFormat(Graph.AdjLists, Height, Width, ConstructionTime);
+                TestOutput.OutputGraph(Graph.AdjLists, Height, Width, ConstructionTime);
                 Anchors.Clear();
                 TestOutput.Path.Clear();
                 TestOutput.ShortestPathTime = 0;
+                values.Clear();
+                allowLiveWire = true;
             }
         }
 
@@ -54,7 +64,7 @@ namespace IntelligentScissors
             pictureBox1.Refresh();
             TestOutput.ShortestPathTime += (DateTime.Now - startTime).TotalSeconds;
             allowLiveWire = false;
-            TestOutput.PrintPathInCompleteTestsFormat(ImageMatrix);
+            TestOutput.PrintPath(ImageMatrix);
             //System.Diagnostics.Debug.WriteLine("Double Click");
         }
 

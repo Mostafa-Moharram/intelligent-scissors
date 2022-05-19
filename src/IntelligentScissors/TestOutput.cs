@@ -15,7 +15,7 @@ namespace IntelligentScissors
         public static TestType PrintTestType = TestType.NoTest;
         public static Queue<KeyValuePair<int, int>> Path = new Queue<KeyValuePair<int, int>>();
         public static double ShortestPathTime; // time in seconds
-        public static void OutputGraph(ArrayList[,] AdjLists, int Height, int Width, int Time) {
+        public static void OutputGraph(ArrayList[,] AdjLists, int Height, int Width, double Time) {
             switch (PrintTestType) {
                 case TestType.SampleTest:
                     OutputGraphInSampleTestsFormat(AdjLists, Height, Width);
@@ -25,7 +25,7 @@ namespace IntelligentScissors
                     break;
             }
         }
-        public static void OutputPath(RGBPixel[,] ImageMatrix) {
+        public static void PrintPath(RGBPixel[,] ImageMatrix) {
             switch (PrintTestType) {
                 case TestType.SampleTest:
                     PrintPathInSampleTestsFormat(ImageMatrix);
