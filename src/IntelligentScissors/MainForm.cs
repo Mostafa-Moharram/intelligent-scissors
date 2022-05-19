@@ -40,12 +40,7 @@ namespace IntelligentScissors
             }
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void btnFinishSelection_Click(object sender, EventArgs e)
+        private void pirctureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             DateTime startTime = DateTime.Now;
             Anchors.Add(Anchors[0]);
@@ -54,6 +49,7 @@ namespace IntelligentScissors
             ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
             TestOutput.ShortestPathTime += (DateTime.Now - startTime).TotalSeconds;
             TestOutput.PrintPathInCompleteTestsFormat(ImageMatrix);
+            //System.Diagnostics.Debug.WriteLine("Double Click");
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e) {
@@ -68,6 +64,12 @@ namespace IntelligentScissors
                 ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
             }
             TestOutput.ShortestPathTime += (DateTime.Now - startTime).TotalSeconds;
+            //System.Diagnostics.Debug.WriteLine("Single Click");
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e) {
+            if (Anchors.Count == 0) return;
+
         }
     }
 }
