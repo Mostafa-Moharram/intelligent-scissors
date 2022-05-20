@@ -39,6 +39,8 @@ namespace IntelligentScissors
             this.autoSelectCheckBox = new System.Windows.Forms.CheckBox();
             this.boxSideLengthLabel = new System.Windows.Forms.Label();
             this.boxSideLengthNumericDomain = new System.Windows.Forms.NumericUpDown();
+            this.selectColorButton = new System.Windows.Forms.Button();
+            this.selectColorDialog = new System.Windows.Forms.ColorDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.testTypeGroupBox.SuspendLayout();
@@ -85,7 +87,7 @@ namespace IntelligentScissors
             this.panel1.Location = new System.Drawing.Point(13, 13);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(562, 375);
+            this.panel1.Size = new System.Drawing.Size(560, 375);
             this.panel1.TabIndex = 15;
             // 
             // testTypeGroupBox
@@ -155,7 +157,7 @@ namespace IntelligentScissors
             this.autoSelectCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.autoSelectCheckBox.AutoSize = true;
             this.autoSelectCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.autoSelectCheckBox.Location = new System.Drawing.Point(445, 417);
+            this.autoSelectCheckBox.Location = new System.Drawing.Point(441, 405);
             this.autoSelectCheckBox.Name = "autoSelectCheckBox";
             this.autoSelectCheckBox.Size = new System.Drawing.Size(108, 20);
             this.autoSelectCheckBox.TabIndex = 18;
@@ -168,7 +170,7 @@ namespace IntelligentScissors
             this.boxSideLengthLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.boxSideLengthLabel.AutoSize = true;
             this.boxSideLengthLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.boxSideLengthLabel.Location = new System.Drawing.Point(445, 446);
+            this.boxSideLengthLabel.Location = new System.Drawing.Point(441, 433);
             this.boxSideLengthLabel.Name = "boxSideLengthLabel";
             this.boxSideLengthLabel.Size = new System.Drawing.Size(119, 16);
             this.boxSideLengthLabel.TabIndex = 19;
@@ -178,7 +180,7 @@ namespace IntelligentScissors
             // 
             this.boxSideLengthNumericDomain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.boxSideLengthNumericDomain.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.boxSideLengthNumericDomain.Location = new System.Drawing.Point(448, 471);
+            this.boxSideLengthNumericDomain.Location = new System.Drawing.Point(444, 457);
             this.boxSideLengthNumericDomain.Maximum = new decimal(new int[] {
             75,
             0,
@@ -199,11 +201,26 @@ namespace IntelligentScissors
             0,
             0});
             // 
+            // selectColorButton
+            // 
+            this.selectColorButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.selectColorButton.BackColor = System.Drawing.Color.Black;
+            this.selectColorButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.selectColorButton.ForeColor = System.Drawing.Color.White;
+            this.selectColorButton.Location = new System.Drawing.Point(444, 484);
+            this.selectColorButton.Name = "selectColorButton";
+            this.selectColorButton.Size = new System.Drawing.Size(120, 28);
+            this.selectColorButton.TabIndex = 21;
+            this.selectColorButton.Text = "Select Color";
+            this.selectColorButton.UseVisualStyleBackColor = false;
+            this.selectColorButton.Click += new System.EventHandler(this.selectColorButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(587, 521);
+            this.ClientSize = new System.Drawing.Size(585, 521);
+            this.Controls.Add(this.selectColorButton);
             this.Controls.Add(this.boxSideLengthNumericDomain);
             this.Controls.Add(this.boxSideLengthLabel);
             this.Controls.Add(this.autoSelectCheckBox);
@@ -237,6 +254,8 @@ namespace IntelligentScissors
         private System.Windows.Forms.CheckBox autoSelectCheckBox;
         private System.Windows.Forms.Label boxSideLengthLabel;
         private System.Windows.Forms.NumericUpDown boxSideLengthNumericDomain;
+        private System.Windows.Forms.Button selectColorButton;
+        private System.Windows.Forms.ColorDialog selectColorDialog;
     }
 }
 

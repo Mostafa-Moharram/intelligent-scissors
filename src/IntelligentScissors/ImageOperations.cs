@@ -45,7 +45,7 @@ namespace IntelligentScissors {
     /// </summary>
     public class ImageOperations
     {
-        public static readonly RGBPixel BLACK_COLOR = new RGBPixel { blue = 0, green = 0, red = 0 };
+        public static RGBPixel SelectColor = new RGBPixel { blue = 0, green = 0, red = 0 };
         public static readonly double OFFSET = 1e-16;  
 
         /// <summary>

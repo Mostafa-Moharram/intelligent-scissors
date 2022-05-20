@@ -66,7 +66,7 @@ namespace IntelligentScissors
             if (!Graph.Contains(e.Y, e.X, destination.Key, destination.Value) ||
                 !Graph.Contains(e.Y, e.X, source.Key, source.Value)) return;
             Graph.UpdateShortestPath(destination);
-            Graph.DrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR,
+            Graph.DrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.SelectColor,
                 source, destination);
             pictureBox1.Refresh();
             TestOutput.ShortestPathTime += (DateTime.Now - startTime).TotalSeconds;
@@ -82,6 +82,7 @@ namespace IntelligentScissors
             Graph.Offset = (int)boxSideLengthNumericDomain.Value;
             autoSelectCheckBox.Enabled = false;
             boxSideLengthNumericDomain.Enabled = false;
+            selectColorButton.Enabled = false;
             int anchorRow = e.Y;
             int anchorColumn = e.X;
             AddNewAnchor(anchorRow, anchorColumn);
@@ -107,7 +108,7 @@ namespace IntelligentScissors
                 Anchors.Add(anchor);
                 Graph.InitDijkstra(ImageMatrix, anchor);
                 Graph.UpdateShortestPath(prvSource);
-                Graph.DrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR, anchor, prvSource);
+                Graph.DrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.SelectColor, anchor, prvSource);
                 pictureBox1.Refresh();
             }
             MouseMovePath.Clear();
@@ -133,7 +134,7 @@ namespace IntelligentScissors
                 KeyValuePair<int, int> destination = new KeyValuePair<int, int>(e.Y, e.X);
                 Graph.MouseUndrawShortestPath((Bitmap)pictureBox1.Image, MouseMovePath);
                 Graph.UpdateShortestPath(destination);
-                Graph.MouseDrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR, source, destination, MouseMovePath);
+                Graph.MouseDrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.SelectColor, source, destination, MouseMovePath);
                 pictureBox1.Refresh();
                 LastValidSelectionPoint = destination;
             }
@@ -143,6 +144,7 @@ namespace IntelligentScissors
             clearSelection(pictureBox1);
             autoSelectCheckBox.Enabled = true;
             boxSideLengthNumericDomain.Enabled = true;
+            selectColorButton.Enabled = true;
         }
 
         private void autoSelectCheckBox_CheckedChanged(object sender, EventArgs e) {
@@ -150,6 +152,15 @@ namespace IntelligentScissors
                 boxSideLengthNumericDomain.Value = Graph.AUTO_SELECT_DEFAULT_OFFSET;
             else
                 boxSideLengthNumericDomain.Value = Graph.MANUAL_SELECT_DEFAULT_OFFSET;
+        }
+
+        private void selectColorButton_Click(object sender, EventArgs e) {
+            if (selectColorDialog.ShowDialog(this) == DialogResult.OK) {
+                Color color = selectColorDialog.Color;
+                selectColorButton.BackColor = color;
+                selectColorButton.ForeColor = Color.FromArgb(255 - color.R, 255 - color.G, 255 - color.B);
+                ImageOperations.SelectColor = new RGBPixel { red = color.R, green = color.G, blue = color.B };
+            }
         }
     }
 }
