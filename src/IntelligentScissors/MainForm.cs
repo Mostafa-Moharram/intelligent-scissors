@@ -33,7 +33,6 @@ namespace IntelligentScissors
                 else if (completeTestFormatRadioButton.Checked)
                     TestOutput.PrintTestType = TestOutput.TestType.CompleteTest;
                 clearSelectionButton.Enabled = true;
-                autoSelectCheckBox.Enabled = false;
                 testTypeGroupBox.Enabled = false;
                 panel1.Enabled = true;
                 //Open the browsed image and display it
@@ -80,6 +79,7 @@ namespace IntelligentScissors
             {
                 return;
             }
+            autoSelectCheckBox.Enabled = false;
             int anchorRow = e.Y;
             int anchorColumn = e.X;
             AddNewAnchor(anchorRow, anchorColumn);
@@ -139,6 +139,7 @@ namespace IntelligentScissors
 
         private void clearSelectionButton_Click(object sender, EventArgs e) {
             clearSelection(pictureBox1);
+            autoSelectCheckBox.Enabled = true;
         }
     }
 }

@@ -13,10 +13,11 @@ namespace IntelligentScissors
         private static double[,] ShortestPath;
         private static KeyValuePair<int, int>[,] Parent;
         public static ArrayList[,] AdjLists;
-        private static readonly int OFFSET = 75;
+        private static readonly int OFFSET = 20;
         private static SortedSet<Node> Nodes = new SortedSet<Node>();
         private static KeyValuePair<int, int> Source;
 
+        // Complexity Analysis: O(1)
         public static bool Contains(int source_x, int source_y, int x, int y) {
             return Math.Abs(x - source_x) < OFFSET && Math.Abs(y - source_y) < OFFSET;
         }
@@ -52,7 +53,7 @@ namespace IntelligentScissors
             }
         }
 
-        // Complexity Analysis: O(n^2)
+        // Complexity Analysis: O(Nodes in Priority Queue)
         public static void InitDijkstra(RGBPixel[,] ImageMatrix,
             KeyValuePair<int, int> source)
         {
@@ -74,7 +75,7 @@ namespace IntelligentScissors
             ShortestPath[sourceNode.X, sourceNode.Y] = sourceNode.Cost;
             Nodes.Add(sourceNode);
         }
-
+        // Complexity Analysis : O(OFFSET^2) which is equivelant to O(1) 
         public static void UpdateShortestPath(KeyValuePair<int, int> destination) {
             // When V is larger than (RADIUS^2) the complexity is O(RADUIS^2)
             // which is equailvant to O(1). Otherwise, the complexity is O(V + E log(V))
@@ -110,7 +111,7 @@ namespace IntelligentScissors
                 }
             }
         }
-
+        // Complexity Analysis : O(Number of pixels in the Shortest Path)
         public static void DrawShortestPath(Bitmap ImageMatrix, RGBPixel PixelColor, KeyValuePair<int, int> Source, KeyValuePair<int, int> Destination)
         {
             int SourceRow = Source.Key;
@@ -129,11 +130,13 @@ namespace IntelligentScissors
                     Color.FromArgb(PixelColor.red, PixelColor.green, PixelColor.blue));
             TestOutput.Path.Enqueue(new KeyValuePair<int, int>(CurrentRow, CurrentColumn));
         }
+        // Complexity Analysis: O(1)
         private static void drawPoint(Bitmap imageMatrix, int r, int c, Color color) {
             imageMatrix.SetPixel(c, r, color);
             foreach (Edge edge in AdjLists[r, c])
                 imageMatrix.SetPixel(edge.Y, edge.X, color);
         }
+        // Complexity Analysis : O(Number of pixels in the Shortest Path)
         public static void MouseDrawShortestPath(Bitmap ImageMatrix, RGBPixel color, KeyValuePair<int, int> Source, KeyValuePair<int, int> Destination, Queue<PixelColorAndPosition> queue) {
             int SourceRow = Source.Key;
             int SourceColumn = Source.Value;
@@ -154,6 +157,8 @@ namespace IntelligentScissors
             ImageMatrix.SetPixel(CurrentColumn, CurrentRow,
                 Color.FromArgb(color.red, color.green, color.blue));
         }
+
+        // Complexity Analysis : O(Number of pixels in the Shortest Path)
         public static void MouseUndrawShortestPath(Bitmap ImageMatrix, Queue<PixelColorAndPosition> queue) {
             while (queue.Count > 0) {
                 var pixel = queue.Dequeue();
