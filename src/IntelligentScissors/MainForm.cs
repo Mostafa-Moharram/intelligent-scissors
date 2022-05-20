@@ -17,8 +17,9 @@ namespace IntelligentScissors
         }
         public static RGBPixel[,] ImageMatrix;
         public static ArrayList Anchors = new ArrayList();
-        static Queue<PixelColorAndPosition> mouseMovePath = new Queue<PixelColorAndPosition>();
-        static bool selectionEnabled;
+        static Queue<PixelColorAndPosition> MouseMovePath = new Queue<PixelColorAndPosition>();
+        static bool SelectionEnabled;
+        static KeyValuePair<int, int> LastValidSelectionPoint;
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
@@ -53,12 +54,12 @@ namespace IntelligentScissors
             Anchors.Clear();
             TestOutput.Path.Clear();
             TestOutput.ShortestPathTime = 0;
-            mouseMovePath.Clear();
-            selectionEnabled = true;
+            MouseMovePath.Clear();
+            SelectionEnabled = true;
         }
 
         private void pirctureBox1_MouseDoubleClick(object sender, MouseEventArgs e) {
-            if (!selectionEnabled || Anchors.Count < 3) return;
+            if (!SelectionEnabled || Anchors.Count < 3) return;
             DateTime startTime = DateTime.Now;
             KeyValuePair<int, int> destination = (KeyValuePair<int, int>)Anchors[0];
             KeyValuePair<int, int> source = (KeyValuePair<int, int>)Anchors[Anchors.Count - 1];
@@ -69,56 +70,69 @@ namespace IntelligentScissors
                 source, destination);
             pictureBox1.Refresh();
             TestOutput.ShortestPathTime += (DateTime.Now - startTime).TotalSeconds;
-            selectionEnabled = false;
+            SelectionEnabled = false;
             TestOutput.PrintPath(ImageMatrix);
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e) {
-            if (!selectionEnabled)
+            if (!SelectionEnabled)
             {
                 return;
             }
-            DateTime startTime = DateTime.Now;
             int anchorRow = e.Y;
             int anchorColumn = e.X;
-            var newSource = new KeyValuePair<int, int>(anchorRow, anchorColumn);
-            if (Anchors.Count == 0) {
-                Anchors.Add(newSource);
-                Graph.InitDijkstra(ImageMatrix, newSource);
-            } else {
+            AddNewAnchor(anchorRow, anchorColumn);
+        }
+
+        private void AddNewAnchor(int anchorRow, int anchorColumn)
+        {
+            var anchor = new KeyValuePair<int, int>(anchorRow, anchorColumn);
+            DateTime startTime = DateTime.Now;
+            if (Anchors.Count == 0)
+            {
+                Anchors.Add(anchor);
+                Graph.InitDijkstra(ImageMatrix, anchor);
+            }
+            else
+            {
                 var prvSource = (KeyValuePair<int, int>)Anchors[Anchors.Count - 1];
-                if (!Graph.Contains(prvSource.Key, prvSource.Value, newSource.Key, newSource.Value))
+                if (!Graph.Contains(prvSource.Key, prvSource.Value, anchor.Key, anchor.Value))
                 {
                     TestOutput.ShortestPathTime += (DateTime.Now - startTime).TotalSeconds;
                     return;
                 }
-                Anchors.Add(newSource);
-                Graph.InitDijkstra(ImageMatrix, newSource);
+                Anchors.Add(anchor);
+                Graph.InitDijkstra(ImageMatrix, anchor);
                 Graph.UpdateShortestPath(prvSource);
-                Graph.DrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR, newSource, prvSource);
+                Graph.DrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR, anchor, prvSource);
                 pictureBox1.Refresh();
             }
-            mouseMovePath.Clear();
+            MouseMovePath.Clear();
             TestOutput.ShortestPathTime += (DateTime.Now - startTime).TotalSeconds;
+            LastValidSelectionPoint = anchor;
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e) {
-            if (!selectionEnabled || Anchors.Count == 0) return;
+            if (!SelectionEnabled || Anchors.Count == 0) return;
             KeyValuePair<int, int> source = (KeyValuePair<int, int>)Anchors[Anchors.Count - 1];
-            if (!Graph.Contains(source.Key, source.Value, e.Y, e.X))
-                return;
-            KeyValuePair<int, int> destination = new KeyValuePair<int, int>(e.Y, e.X);
-            Graph.MouseUndrawShortestPath((Bitmap)pictureBox1.Image, mouseMovePath);
-            Graph.UpdateShortestPath(destination);
-            Graph.MouseDrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR, source, destination, mouseMovePath);
-            pictureBox1.Refresh();
-        }
-
-        private void button1_Click(object sender, EventArgs e) {
-            using (var g = pictureBox1.CreateGraphics()) {
-                g.DrawLine(new Pen(Color.Black) {
-                    Width = 2.0F
-                }, 0, 0, 100, 100);
+            int sourceRow = source.Key;
+            int sourceColumn = source.Value;
+            int newPointRow = e.Y;
+            int newPointColumn = e.X;
+            if (!Graph.Contains(sourceRow, sourceColumn, newPointRow, newPointColumn))
+            {
+                if (autoSelectCheckBox.Checked)
+                {
+                    AddNewAnchor(LastValidSelectionPoint.Key, LastValidSelectionPoint.Value);
+                }
+            } else
+            {
+                KeyValuePair<int, int> destination = new KeyValuePair<int, int>(e.Y, e.X);
+                Graph.MouseUndrawShortestPath((Bitmap)pictureBox1.Image, MouseMovePath);
+                Graph.UpdateShortestPath(destination);
+                Graph.MouseDrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR, source, destination, MouseMovePath);
+                pictureBox1.Refresh();
+                LastValidSelectionPoint = destination;
             }
         }
 
