@@ -37,16 +37,19 @@ namespace IntelligentScissors
             this.noTestRadioButton = new System.Windows.Forms.RadioButton();
             this.clearSelectionButton = new System.Windows.Forms.Button();
             this.autoSelectCheckBox = new System.Windows.Forms.CheckBox();
+            this.boxSideLengthLabel = new System.Windows.Forms.Label();
+            this.boxSideLengthNumericDomain = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.testTypeGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.boxSideLengthNumericDomain)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOpen
             // 
             this.btnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnOpen.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOpen.Location = new System.Drawing.Point(19, 403);
+            this.btnOpen.Location = new System.Drawing.Point(30, 419);
             this.btnOpen.Margin = new System.Windows.Forms.Padding(4);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(212, 40);
@@ -82,7 +85,7 @@ namespace IntelligentScissors
             this.panel1.Location = new System.Drawing.Point(13, 13);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(432, 375);
+            this.panel1.Size = new System.Drawing.Size(562, 375);
             this.panel1.TabIndex = 15;
             // 
             // testTypeGroupBox
@@ -138,7 +141,7 @@ namespace IntelligentScissors
             this.clearSelectionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.clearSelectionButton.Enabled = false;
             this.clearSelectionButton.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.clearSelectionButton.Location = new System.Drawing.Point(19, 443);
+            this.clearSelectionButton.Location = new System.Drawing.Point(30, 459);
             this.clearSelectionButton.Margin = new System.Windows.Forms.Padding(4);
             this.clearSelectionButton.Name = "clearSelectionButton";
             this.clearSelectionButton.Size = new System.Drawing.Size(212, 40);
@@ -152,18 +155,57 @@ namespace IntelligentScissors
             this.autoSelectCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.autoSelectCheckBox.AutoSize = true;
             this.autoSelectCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.autoSelectCheckBox.Location = new System.Drawing.Point(71, 490);
+            this.autoSelectCheckBox.Location = new System.Drawing.Point(445, 417);
             this.autoSelectCheckBox.Name = "autoSelectCheckBox";
             this.autoSelectCheckBox.Size = new System.Drawing.Size(108, 20);
             this.autoSelectCheckBox.TabIndex = 18;
             this.autoSelectCheckBox.Text = "Auto Select";
             this.autoSelectCheckBox.UseVisualStyleBackColor = true;
+            this.autoSelectCheckBox.CheckedChanged += new System.EventHandler(this.autoSelectCheckBox_CheckedChanged);
+            // 
+            // boxSideLengthLabel
+            // 
+            this.boxSideLengthLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.boxSideLengthLabel.AutoSize = true;
+            this.boxSideLengthLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.boxSideLengthLabel.Location = new System.Drawing.Point(445, 446);
+            this.boxSideLengthLabel.Name = "boxSideLengthLabel";
+            this.boxSideLengthLabel.Size = new System.Drawing.Size(119, 16);
+            this.boxSideLengthLabel.TabIndex = 19;
+            this.boxSideLengthLabel.Text = "Box Side Length";
+            // 
+            // boxSideLengthNumericDomain
+            // 
+            this.boxSideLengthNumericDomain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.boxSideLengthNumericDomain.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.boxSideLengthNumericDomain.Location = new System.Drawing.Point(448, 471);
+            this.boxSideLengthNumericDomain.Maximum = new decimal(new int[] {
+            75,
+            0,
+            0,
+            0});
+            this.boxSideLengthNumericDomain.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.boxSideLengthNumericDomain.Name = "boxSideLengthNumericDomain";
+            this.boxSideLengthNumericDomain.ReadOnly = true;
+            this.boxSideLengthNumericDomain.Size = new System.Drawing.Size(120, 22);
+            this.boxSideLengthNumericDomain.TabIndex = 20;
+            this.boxSideLengthNumericDomain.Value = new decimal(new int[] {
+            75,
+            0,
+            0,
+            0});
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(457, 521);
+            this.ClientSize = new System.Drawing.Size(587, 521);
+            this.Controls.Add(this.boxSideLengthNumericDomain);
+            this.Controls.Add(this.boxSideLengthLabel);
             this.Controls.Add(this.autoSelectCheckBox);
             this.Controls.Add(this.clearSelectionButton);
             this.Controls.Add(this.testTypeGroupBox);
@@ -177,6 +219,7 @@ namespace IntelligentScissors
             this.panel1.PerformLayout();
             this.testTypeGroupBox.ResumeLayout(false);
             this.testTypeGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.boxSideLengthNumericDomain)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -192,6 +235,8 @@ namespace IntelligentScissors
         private System.Windows.Forms.RadioButton noTestRadioButton;
         private System.Windows.Forms.Button clearSelectionButton;
         private System.Windows.Forms.CheckBox autoSelectCheckBox;
+        private System.Windows.Forms.Label boxSideLengthLabel;
+        private System.Windows.Forms.NumericUpDown boxSideLengthNumericDomain;
     }
 }
 

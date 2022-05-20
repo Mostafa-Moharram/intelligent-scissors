@@ -79,7 +79,9 @@ namespace IntelligentScissors
             {
                 return;
             }
+            Graph.Offset = (int)boxSideLengthNumericDomain.Value;
             autoSelectCheckBox.Enabled = false;
+            boxSideLengthNumericDomain.Enabled = false;
             int anchorRow = e.Y;
             int anchorColumn = e.X;
             AddNewAnchor(anchorRow, anchorColumn);
@@ -140,6 +142,14 @@ namespace IntelligentScissors
         private void clearSelectionButton_Click(object sender, EventArgs e) {
             clearSelection(pictureBox1);
             autoSelectCheckBox.Enabled = true;
+            boxSideLengthNumericDomain.Enabled = true;
+        }
+
+        private void autoSelectCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if (autoSelectCheckBox.Checked)
+                boxSideLengthNumericDomain.Value = Graph.AUTO_SELECT_DEFAULT_OFFSET;
+            else
+                boxSideLengthNumericDomain.Value = Graph.MANUAL_SELECT_DEFAULT_OFFSET;
         }
     }
 }

@@ -13,13 +13,15 @@ namespace IntelligentScissors
         private static double[,] ShortestPath;
         private static KeyValuePair<int, int>[,] Parent;
         public static ArrayList[,] AdjLists;
-        private static readonly int OFFSET = 20;
+        public static readonly int MANUAL_SELECT_DEFAULT_OFFSET = 75;
+        public static readonly int AUTO_SELECT_DEFAULT_OFFSET = 20;
+        public static int Offset = MANUAL_SELECT_DEFAULT_OFFSET;
         private static SortedSet<Node> Nodes = new SortedSet<Node>();
         private static KeyValuePair<int, int> Source;
 
         // Complexity Analysis: O(1)
         public static bool Contains(int source_x, int source_y, int x, int y) {
-            return Math.Abs(x - source_x) < OFFSET && Math.Abs(y - source_y) < OFFSET;
+            return Math.Abs(x - source_x) < Offset && Math.Abs(y - source_y) < Offset;
         }
         // Complexity Analysis: O(V), where V = width * height
         public static void Construct(RGBPixel[,] ImageMatrix) { 
@@ -64,8 +66,8 @@ namespace IntelligentScissors
             Parent = new KeyValuePair<int, int>[height, width];
             // When the width and height are larger than RADIUS the complexity is O(RADUIS^2)
             // which is equailvant to O(1). Otherwise, the complexity is O(width * height)
-            for (int i = Math.Max(0, Source.Key - OFFSET); i < Math.Min(height, Source.Key + OFFSET); ++i) {
-                for (int j = Math.Max(0, Source.Value - OFFSET); j < Math.Min(width, Source.Value + OFFSET); ++j) {
+            for (int i = Math.Max(0, Source.Key - Offset); i < Math.Min(height, Source.Key + Offset); ++i) {
+                for (int j = Math.Max(0, Source.Value - Offset); j < Math.Min(width, Source.Value + Offset); ++j) {
                     ShortestPath[i, j] = double.PositiveInfinity;
                 }
             }
