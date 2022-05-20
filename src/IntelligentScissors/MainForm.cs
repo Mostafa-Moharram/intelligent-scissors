@@ -15,11 +15,10 @@ namespace IntelligentScissors
         {
             InitializeComponent();
         }
-
         public static RGBPixel[,] ImageMatrix;
         public static ArrayList Anchors = new ArrayList();
-        Queue<PixelColorAndPosition> mouseMovePath = new Queue<PixelColorAndPosition>();
-        bool selectionEnabled = true;
+        static Queue<PixelColorAndPosition> mouseMovePath = new Queue<PixelColorAndPosition>();
+        static bool selectionEnabled;
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
@@ -32,33 +31,40 @@ namespace IntelligentScissors
                     TestOutput.PrintTestType = TestOutput.TestType.SampleTest;
                 else if (completeTestFormatRadioButton.Checked)
                     TestOutput.PrintTestType = TestOutput.TestType.CompleteTest;
+                clearSelectionButton.Enabled = true;
+                autoSelectCheckBox.Enabled = false;
                 testTypeGroupBox.Enabled = false;
                 panel1.Enabled = true;
                 //Open the browsed image and display it
                 string OpenedFilePath = openFileDialog1.FileName;
                 ImageMatrix = ImageOperations.OpenImage(OpenedFilePath);
-                ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
                 DateTime StartTime = DateTime.Now;
                 Graph.Construct(ImageMatrix);
                 double ConstructionTime = (DateTime.Now - StartTime).TotalSeconds;
                 int Width = ImageOperations.GetWidth(ImageMatrix);
                 int Height = ImageOperations.GetHeight(ImageMatrix);
                 TestOutput.OutputGraph(Graph.AdjLists, Height, Width, ConstructionTime);
-                Anchors.Clear();
-                TestOutput.Path.Clear();
-                TestOutput.ShortestPathTime = 0;
-                mouseMovePath.Clear();
-                selectionEnabled = true;
+                clearSelection(pictureBox1);
             }
         }
 
+        private static void clearSelection(PictureBox pictureBox) {
+            ImageOperations.DisplayImage(ImageMatrix, pictureBox);
+            Anchors.Clear();
+            TestOutput.Path.Clear();
+            TestOutput.ShortestPathTime = 0;
+            mouseMovePath.Clear();
+            selectionEnabled = true;
+        }
+
         private void pirctureBox1_MouseDoubleClick(object sender, MouseEventArgs e) {
-            if (!selectionEnabled || Anchors.Count < 2) return;
+            if (!selectionEnabled || Anchors.Count < 3) return;
             DateTime startTime = DateTime.Now;
             KeyValuePair<int, int> destination = (KeyValuePair<int, int>)Anchors[0];
             KeyValuePair<int, int> source = (KeyValuePair<int, int>)Anchors[Anchors.Count - 1];
             if (!Graph.Contains(e.Y, e.X, destination.Key, destination.Value) ||
                 !Graph.Contains(e.Y, e.X, source.Key, source.Value)) return;
+            Graph.UpdateShortestPath(destination);
             Graph.DrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR,
                 source, destination);
             pictureBox1.Refresh();
@@ -106,6 +112,18 @@ namespace IntelligentScissors
             Graph.UpdateShortestPath(destination);
             Graph.MouseDrawShortestPath((Bitmap)pictureBox1.Image, ImageOperations.BLACK_COLOR, source, destination, mouseMovePath);
             pictureBox1.Refresh();
+        }
+
+        private void button1_Click(object sender, EventArgs e) {
+            using (var g = pictureBox1.CreateGraphics()) {
+                g.DrawLine(new Pen(Color.Black) {
+                    Width = 2.0F
+                }, 0, 0, 100, 100);
+            }
+        }
+
+        private void clearSelectionButton_Click(object sender, EventArgs e) {
+            clearSelection(pictureBox1);
         }
     }
 }

@@ -24,12 +24,12 @@ namespace IntelligentScissors
         public static void Construct(RGBPixel[,] ImageMatrix) { 
             int width = ImageOperations.GetWidth(ImageMatrix);
             int height = ImageOperations.GetHeight(ImageMatrix);
-            Graph.AdjLists = new ArrayList[height, width];
+            AdjLists = new ArrayList[height, width];
 
             // O(width * height)
             for (int i = 0; i < height; ++i) { // O(height)
                 for (int j = 0; j < width; ++j) { // O(width)
-                    Graph.AdjLists[i, j] = new ArrayList();
+                    AdjLists[i, j] = new ArrayList();
                 }
             }
 
@@ -40,13 +40,13 @@ namespace IntelligentScissors
 
                     if (i != height - 1)
                     {
-                        Graph.AdjLists[i, j].Add(new Edge(i + 1, j, 1 / vector.Y));
-                        Graph.AdjLists[i + 1, j].Add(new Edge(i, j, 1 / vector.Y));
+                        AdjLists[i, j].Add(new Edge(i + 1, j, 1 / vector.Y));
+                        AdjLists[i + 1, j].Add(new Edge(i, j, 1 / vector.Y));
                     }
                     if (j != width - 1)
                     {
-                        Graph.AdjLists[i, j].Add(new Edge(i, j + 1, 1 / vector.X));
-                        Graph.AdjLists[i, j + 1].Add(new Edge(i, j, 1 / vector.X));
+                        AdjLists[i, j].Add(new Edge(i, j + 1, 1 / vector.X));
+                        AdjLists[i, j + 1].Add(new Edge(i, j, 1 / vector.X));
                     }
                 }
             }
@@ -118,25 +118,27 @@ namespace IntelligentScissors
             int CurrentRow = Destination.Key, CurrentColumn = Destination.Value;
             while (CurrentRow != SourceRow || CurrentColumn != SourceColumn)
             {
-                //ImageMatrix[CurrentRow, CurrentColumn] = PixelColor;
-                ImageMatrix.SetPixel(CurrentColumn, CurrentRow,
+                drawPoint(ImageMatrix, CurrentRow, CurrentColumn,
                     Color.FromArgb(PixelColor.red, PixelColor.green, PixelColor.blue));
                 TestOutput.Path.Enqueue(new KeyValuePair<int, int>(CurrentRow, CurrentColumn));
                 KeyValuePair<int, int> ParentPosition = Graph.Parent[CurrentRow, CurrentColumn];
                 CurrentRow = ParentPosition.Key;
                 CurrentColumn = ParentPosition.Value;
             }
-            //ImageMatrix[CurrentRow, CurrentColumn] = PixelColor;
-            ImageMatrix.SetPixel(CurrentColumn, CurrentRow,
-                Color.FromArgb(PixelColor.red, PixelColor.green, PixelColor.blue));
+            drawPoint(ImageMatrix, CurrentRow, CurrentColumn,
+                    Color.FromArgb(PixelColor.red, PixelColor.green, PixelColor.blue));
             TestOutput.Path.Enqueue(new KeyValuePair<int, int>(CurrentRow, CurrentColumn));
+        }
+        private static void drawPoint(Bitmap imageMatrix, int r, int c, Color color) {
+            imageMatrix.SetPixel(c, r, color);
+            foreach (Edge edge in AdjLists[r, c])
+                imageMatrix.SetPixel(edge.Y, edge.X, color);
         }
         public static void MouseDrawShortestPath(Bitmap ImageMatrix, RGBPixel color, KeyValuePair<int, int> Source, KeyValuePair<int, int> Destination, Queue<PixelColorAndPosition> queue) {
             int SourceRow = Source.Key;
             int SourceColumn = Source.Value;
             int CurrentRow = Destination.Key, CurrentColumn = Destination.Value;
             while (CurrentRow != SourceRow || CurrentColumn != SourceColumn) {
-                //ImageMatrix[CurrentRow, CurrentColumn] = PixelColor
                 queue.Enqueue(new PixelColorAndPosition(
                     CurrentColumn, CurrentRow,
                     ImageMatrix.GetPixel(CurrentColumn, CurrentRow)));
@@ -146,7 +148,6 @@ namespace IntelligentScissors
                 CurrentRow = ParentPosition.Key;
                 CurrentColumn = ParentPosition.Value;
             }
-            //ImageMatrix[CurrentRow, CurrentColumn] = PixelColor;
             queue.Enqueue(new PixelColorAndPosition(
                     CurrentColumn, CurrentRow,
                     ImageMatrix.GetPixel(CurrentColumn, CurrentRow)));

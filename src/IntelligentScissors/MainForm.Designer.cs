@@ -35,6 +35,8 @@ namespace IntelligentScissors
             this.completeTestFormatRadioButton = new System.Windows.Forms.RadioButton();
             this.sampleTestFormatRadioButton = new System.Windows.Forms.RadioButton();
             this.noTestRadioButton = new System.Windows.Forms.RadioButton();
+            this.clearSelectionButton = new System.Windows.Forms.Button();
+            this.autoSelectCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.testTypeGroupBox.SuspendLayout();
@@ -43,11 +45,11 @@ namespace IntelligentScissors
             // btnOpen
             // 
             this.btnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnOpen.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOpen.Location = new System.Drawing.Point(49, 415);
+            this.btnOpen.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOpen.Location = new System.Drawing.Point(19, 403);
             this.btnOpen.Margin = new System.Windows.Forms.Padding(4);
             this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(132, 76);
+            this.btnOpen.Size = new System.Drawing.Size(212, 40);
             this.btnOpen.TabIndex = 2;
             this.btnOpen.Text = "Open Image";
             this.btnOpen.UseVisualStyleBackColor = true;
@@ -80,7 +82,7 @@ namespace IntelligentScissors
             this.panel1.Location = new System.Drawing.Point(13, 13);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(477, 375);
+            this.panel1.Size = new System.Drawing.Size(432, 375);
             this.panel1.TabIndex = 15;
             // 
             // testTypeGroupBox
@@ -89,7 +91,7 @@ namespace IntelligentScissors
             this.testTypeGroupBox.Controls.Add(this.completeTestFormatRadioButton);
             this.testTypeGroupBox.Controls.Add(this.sampleTestFormatRadioButton);
             this.testTypeGroupBox.Controls.Add(this.noTestRadioButton);
-            this.testTypeGroupBox.Location = new System.Drawing.Point(232, 395);
+            this.testTypeGroupBox.Location = new System.Drawing.Point(249, 395);
             this.testTypeGroupBox.Name = "testTypeGroupBox";
             this.testTypeGroupBox.Size = new System.Drawing.Size(186, 117);
             this.testTypeGroupBox.TabIndex = 16;
@@ -131,11 +133,39 @@ namespace IntelligentScissors
             this.noTestRadioButton.Text = "No Test";
             this.noTestRadioButton.UseVisualStyleBackColor = true;
             // 
+            // clearSelectionButton
+            // 
+            this.clearSelectionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.clearSelectionButton.Enabled = false;
+            this.clearSelectionButton.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.clearSelectionButton.Location = new System.Drawing.Point(19, 443);
+            this.clearSelectionButton.Margin = new System.Windows.Forms.Padding(4);
+            this.clearSelectionButton.Name = "clearSelectionButton";
+            this.clearSelectionButton.Size = new System.Drawing.Size(212, 40);
+            this.clearSelectionButton.TabIndex = 17;
+            this.clearSelectionButton.Text = "Clear Selection";
+            this.clearSelectionButton.UseVisualStyleBackColor = true;
+            this.clearSelectionButton.Click += new System.EventHandler(this.clearSelectionButton_Click);
+            // 
+            // autoSelectCheckBox
+            // 
+            this.autoSelectCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.autoSelectCheckBox.AutoSize = true;
+            this.autoSelectCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.autoSelectCheckBox.Location = new System.Drawing.Point(71, 490);
+            this.autoSelectCheckBox.Name = "autoSelectCheckBox";
+            this.autoSelectCheckBox.Size = new System.Drawing.Size(108, 20);
+            this.autoSelectCheckBox.TabIndex = 18;
+            this.autoSelectCheckBox.Text = "Auto Select";
+            this.autoSelectCheckBox.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(502, 521);
+            this.ClientSize = new System.Drawing.Size(457, 521);
+            this.Controls.Add(this.autoSelectCheckBox);
+            this.Controls.Add(this.clearSelectionButton);
             this.Controls.Add(this.testTypeGroupBox);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnOpen);
@@ -148,6 +178,7 @@ namespace IntelligentScissors
             this.testTypeGroupBox.ResumeLayout(false);
             this.testTypeGroupBox.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -159,6 +190,8 @@ namespace IntelligentScissors
         private System.Windows.Forms.RadioButton completeTestFormatRadioButton;
         private System.Windows.Forms.RadioButton sampleTestFormatRadioButton;
         private System.Windows.Forms.RadioButton noTestRadioButton;
+        private System.Windows.Forms.Button clearSelectionButton;
+        private System.Windows.Forms.CheckBox autoSelectCheckBox;
     }
 }
 
