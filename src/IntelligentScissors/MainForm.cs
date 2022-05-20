@@ -39,6 +39,7 @@ namespace IntelligentScissors
                 //Open the browsed image and display it
                 string OpenedFilePath = openFileDialog1.FileName;
                 ImageMatrix = ImageOperations.OpenImage(OpenedFilePath);
+                ImageMatrix = ImageOperations.GaussianFilter1D(ImageMatrix, 3, 1);
                 DateTime StartTime = DateTime.Now;
                 Graph.Construct(ImageMatrix);
                 double ConstructionTime = (DateTime.Now - StartTime).TotalSeconds;
