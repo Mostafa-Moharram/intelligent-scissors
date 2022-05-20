@@ -35,7 +35,7 @@ namespace IntelligentScissors
                     break;
             }
         }
-        public static void OutputGraphInSampleTestsFormat(ArrayList[,] AdjLists, int Height, int Width)
+        private static void OutputGraphInSampleTestsFormat(ArrayList[,] AdjLists, int Height, int Width)
         {
             string file_name = "sample-output.txt";
             StreamWriter streamWriter = new StreamWriter(file_name);
@@ -58,7 +58,7 @@ namespace IntelligentScissors
             }
             streamWriter.Close();
         }
-        public static void PrintPathInSampleTestsFormat(RGBPixel[,] ImageMatrix)
+        private static void PrintPathInSampleTestsFormat(RGBPixel[,] ImageMatrix)
         {
             int width = ImageOperations.GetWidth(ImageMatrix);
             string file_name = "sample-path.txt";
@@ -74,7 +74,7 @@ namespace IntelligentScissors
             streamWriter.Close();
         }
 
-        public static void OutputGraphInCompleteTestsFormat(ArrayList[,] AdjLists, int Height, int Width, double time)
+        private static void OutputGraphInCompleteTestsFormat(ArrayList[,] AdjLists, int Height, int Width, double time)
         {
             string file_name = "complete-output.txt";
             StreamWriter streamWriter = new StreamWriter(file_name);
@@ -98,7 +98,7 @@ namespace IntelligentScissors
             streamWriter.Close();
         }
 
-        public static void PrintPathInCompleteTestsFormat(RGBPixel[,] ImageMatrix)
+        private static void PrintPathInCompleteTestsFormat(RGBPixel[,] ImageMatrix)
         {
             int width = ImageOperations.GetWidth(ImageMatrix);
             string file_name = "complete-path.txt";
