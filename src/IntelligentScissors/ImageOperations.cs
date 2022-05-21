@@ -46,7 +46,7 @@ namespace IntelligentScissors {
     public class ImageOperations
     {
         public static RGBPixel SelectColor = new RGBPixel { blue = 0, green = 0, red = 0 };
-        public static readonly double OFFSET = 1e-16;  
+        public static readonly double OFFSET = 75;  
 
         /// <summary>
         /// Open an image and load it into 2D array of colors (size: Height x Width)

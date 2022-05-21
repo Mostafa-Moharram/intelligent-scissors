@@ -78,7 +78,7 @@ namespace IntelligentScissors
         {
             string file_name = "complete-output.txt";
             StreamWriter streamWriter = new StreamWriter(file_name);
-            streamWriter.WriteLine("Constructed Graph: (Format: node_index|edges:(from, to, weight)... )\n");
+            streamWriter.WriteLine("Constructed Graph: (Format: node_index|edges:(from, to, weight)... )");
 
             for (int i = 0; i < Height; ++i)
             {
