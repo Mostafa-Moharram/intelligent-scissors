@@ -16,7 +16,7 @@ namespace IntelligentScissors
         public static readonly int MANUAL_SELECT_DEFAULT_OFFSET = 75;
         public static readonly int AUTO_SELECT_DEFAULT_OFFSET = 20;
         public static int Offset = MANUAL_SELECT_DEFAULT_OFFSET;
-        private static SortedSet<Node> Nodes = new SortedSet<Node>();
+        private static readonly MinHeap<Node> Nodes = new MinHeap<Node>();
         private static KeyValuePair<int, int> Source;
 
         // Complexity Analysis: O(1)
@@ -75,7 +75,7 @@ namespace IntelligentScissors
             Node sourceNode = new Node(Source.Key, Source.Value, 0.0);
             Parent[sourceNode.X, sourceNode.Y] = new KeyValuePair<int, int>(Source.Key, Source.Value);
             ShortestPath[sourceNode.X, sourceNode.Y] = sourceNode.Cost;
-            Nodes.Add(sourceNode);
+            Nodes.Push(sourceNode);
         }
         // Complexity Analysis : O(OFFSET^2) which is equivelant to O(1) 
         public static void UpdateShortestPath(KeyValuePair<int, int> destination) {
@@ -88,12 +88,12 @@ namespace IntelligentScissors
             }
             while (Nodes.Count != 0) {
             
-                Node node = Nodes.Min(); // O(log(Nodes.size())
+                Node node = Nodes.Peek; // O(log(Nodes.size())
                 if (node.X == destinationRow && node.Y == destinationColumn)
                 {
                     break;
                 }
-                Nodes.Remove(node); // O(log(Nodes.size())
+                Nodes.Pop(); // O(log(Nodes.size())
                 if (ShortestPath[node.X, node.Y] < node.Cost)
                 {
                     continue;
@@ -108,7 +108,7 @@ namespace IntelligentScissors
                     {
                         ShortestPath[edge.X, edge.Y] = newCost;
                         Parent[edge.X, edge.Y] = new KeyValuePair<int, int>(node.X, node.Y);
-                        Nodes.Add(new Node(edge.X, edge.Y, newCost)); // O(log(Nodes.size())
+                        Nodes.Push(new Node(edge.X, edge.Y, newCost)); // O(log(Nodes.size())
                     }
                 }
             }
@@ -169,7 +169,7 @@ namespace IntelligentScissors
         }
     }
 
-    class Node : IComparable
+    class Node : IComparable<Node>
     {
         public readonly int X, Y;
         public readonly double Cost;
@@ -181,13 +181,12 @@ namespace IntelligentScissors
             this.Cost = Cost;
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(Node other)
         {
-            if (obj == null)
+            if (other == null)
             {
                 return 1;
             }
-            Node other = (Node)obj;
 
             if (this.Cost == other.Cost)
             {
